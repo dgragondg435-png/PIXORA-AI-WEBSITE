@@ -1,0 +1,1 @@
+web: gunicorn pixora_website:app

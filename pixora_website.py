@@ -1,14 +1,15 @@
 
-from pathlib import Path
 import os
 
-from flask import Flask, send_from_directory, render_template_string
+from flask import Flask, redirect, render_template_string
 
 app = Flask(__name__)
 
-BASE_DIR = Path(__file__).resolve().parent
-DOWNLOAD_DIR = BASE_DIR / "downloads"
-DOWNLOAD_FILENAME = "PIXORA_AI_Full.zip"
+DOWNLOAD_URL = (
+    "https://github.com/dgragondg435-png/"
+    "PIXORA-AI-WEBSITE/releases/download/"
+    "v1.0.0/PIXORA_AI_Full.zip"
+)
 
 HTML = """
 <!DOCTYPE html>
@@ -379,17 +380,7 @@ def home():
 
 @app.route("/download")
 def download():
-
-    file_path = DOWNLOAD_DIR / DOWNLOAD_FILENAME
-
-    if not file_path.is_file():
-        return "Download package not found.", 404
-
-    return send_from_directory(
-        str(DOWNLOAD_DIR),
-        DOWNLOAD_FILENAME,
-        as_attachment=True
-    )
+    return redirect(DOWNLOAD_URL, code=302)
 
 
 @app.route("/health")
@@ -398,9 +389,6 @@ def health():
 
 
 if __name__ == "__main__":
-
-    DOWNLOAD_DIR.mkdir(parents=True, exist_ok=True)
-
     port = int(os.environ.get("PORT", 5000))
 
     app.run(
